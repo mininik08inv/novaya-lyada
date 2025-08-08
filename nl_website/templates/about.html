@@ -2,5 +2,144 @@
 {% load static %}
 
 {% block content %}
-<h1>O сайте</h1>
+<div class="container py-5">
+    <!-- Заголовок -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-4 fw-bold">О нашем сайте</h1>
+            <p class="lead text-muted">Узнайте больше о нашей миссии и команде</p>
+        </div>
+    </div>
+
+    <!-- Основное содержание -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4 p-md-5">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-4 mb-md-0">
+                        <img src="{% static 'images/logo/logo.png' %}"
+                             alt="О нашем сайте"
+                             class="img-fluid rounded-3 shadow">
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="h3 mb-3">Наша миссия</h2>
+                        <p class="lead">Мы создаем платформу жителей поселка Новая ляда</p>
+                        <p>Наш сайт помогает жителям поселка узнавать последние новости и события.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm p-4 text-center">
+                <div class="icon-lg bg-primary bg-opacity-10 text-primary rounded-circle mb-3 mx-auto">
+                    <i class="bi bi-calendar2-event fs-3"></i>
+                </div>
+                <h3 class="h5">Актуальные события</h3>
+                <p class="text-muted">Всегда свежая информация о предстоящих мероприятиях с удобной системой фильтрации.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm p-4 text-center">
+                <div class="icon-lg bg-success bg-opacity-10 text-success rounded-circle mb-3 mx-auto">
+                    <i class="bi bi-people fs-3"></i>
+                </div>
+                <h3 class="h5">Сообщество</h3>
+                <p class="text-muted">Присоединяйтесь к нашему растущему сообществу и предлагайте идеи по улучшению поселка.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm p-4 text-center">
+                <div class="icon-lg bg-info bg-opacity-10 text-info rounded-circle mb-3 mx-auto">
+                    <i class="bi bi-lightbulb fs-3"></i>
+                </div>
+                <h3 class="h5">Полезные материалы</h3>
+                <p class="text-muted">База знаний и полезных материалов для организаторов мероприятий.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Команда -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h2 class="h3 mb-3">Наша команда</h2>
+            <p class="text-muted">Люди, которые делают этот проект возможным</p>
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm text-center p-4">
+                <img src="{% static 'images/NA.jpg' %}"
+                     class="rounded-circle mx-auto mb-3"
+                     width="120"
+                     height="120"
+                     alt="Основатель">
+                <h3 class="h5 mb-1">Николай Афанасьев</h3>
+                <p class="text-muted small mb-2">Основатель</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a href="#" class="text-dark"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-dark"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="text-dark"><i class="bi bi-github"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm text-center p-4">
+                <img src="{% static 'images/NA.jpg' %}"
+                     class="rounded-circle mx-auto mb-3"
+                     width="120"
+                     height="120"
+                     alt="Разработчик">
+                <h3 class="h5 mb-1">Николай Афанасьев</h3>
+                <p class="text-muted small mb-2">Главный разработчик</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a href="#" class="text-dark"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-dark"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="text-dark"><i class="bi bi-github"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm text-center p-4">
+                <img src="{% static 'images/NA.jpg' %}"
+                     class="rounded-circle mx-auto mb-3"
+                     width="120"
+                     height="120"
+                     alt="Дизайнер">
+                <h3 class="h5 mb-1">Николай Афанасьев</h3>
+                <p class="text-muted small mb-2">UI/UX Дизайнер</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a href="#" class="text-dark"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-dark"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="text-dark"><i class="bi bi-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .icon-lg {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .hover-shadow {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>
 {% endblock content %}

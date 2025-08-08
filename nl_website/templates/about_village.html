@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="site-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h1 class="display-4 fw-bold">Известные люди нашего посёлка</h1>
+                <p class="lead text-muted">Выдающиеся личности, прославившие нашу малую родину</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="site-section" id="famous-people-section">
+    <div class="container">
+        <div class="row g-4">
+            {% for human in famous_person %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                    {% if human.photo %}
+                    <img src="{{ human.photo.url }}" class="card-img-top object-fit-cover" alt="{{ human.last_name }} {{ human.first_name }}"
+                         style="height: 300px; object-position: top;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                         style="height: 300px;">
+                        <i class="bi bi-person-badge fs-1 text-muted"></i>
+                    </div>
+                    {% endif %}
+
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            {% for category in human.categories.all %}
+                            <span class="badge bg-primary">{{ category.name }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <h3 class="h5 card-title">
+                            {{ human.last_name }} {{ human.first_name }} {{ human.patronymic|default:"" }}
+                        </h3>
+
+                        <p class="card-text text-muted">
+                            {{ human.biography|truncatechars:200|default:"Информация скоро будет добавлена..." }}
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-transparent border-0 pt-0">
+                        <a href="{{ human.get_absolute_url }}" class="btn btn-outline-primary stretched-link">
+                            Подробнее <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info text-center py-4">
+                    <i class="bi bi-info-circle fs-4"></i>
+                    <p class="mb-0 mt-2">Информация о знаменитых земляках пока не добавлена. Проверьте позже.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hover-shadow {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .object-fit-cover {
+        object-fit: cover;
+    }
+</style>
+{% endblock %}

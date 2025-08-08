@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Заголовок и мета-информация -->
+    <div class="row mb-4">
+        <div class="col-lg-8 mx-auto text-center">
+            <span class="badge bg-primary mb-2">{{ event.cat }}</span>
+            <h1 class="display-5 fw-bold">{{ event.title }}</h1>
+            <div class="d-flex justify-content-center gap-4 text-muted mb-3">
+                <span><i class="bi bi-calendar-event me-1"></i> {{ event.date_of_event|date:"d E Y, H:i" }}</span>
+                <span><i class="bi bi-person me-1"></i> {{ event.author }}</span>
+            </div>
+            {% if event.status == "published" %}
+                <span class="badge bg-success">Опубликовано</span>
+            {% elif event.status == "archive" %}
+                <span class="badge bg-secondary">В архиве</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Основное содержимое -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Изображение события -->
+            {% if event.image %}
+            <div class="mb-4 text-center">
+                <img src="{{ event.image.url }}"
+                     alt="{{ event.title }}"
+                     class="img-fluid rounded-3 shadow"
+                     style="max-height: 500px; width: auto;">
+            </div>
+            {% endif %}
+
+            <!-- Контент -->
+            <article class="mb-5">
+                <div class="fs-5 lh-base">
+                    {{ event.content|linebreaks }}
+                </div>
+            </article>
+
+            <!-- Дополнительная информация -->
+            <div class="card border-0 bg-light p-4 mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="mb-3"><i class="bi bi-info-circle me-2"></i>Детали события</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><strong>Дата создания:</strong> {{ event.created|date:"d.m.Y" }}</li>
+                            <li class="mb-2"><strong>Последнее обновление:</strong> {{ event.updated|date:"d.m.Y H:i" }}</li>
+                            <li><strong>Категория:</strong> {{ event.cat }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3"><i class="bi bi-person-circle me-2"></i>Об авторе</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <i class="bi bi-person-square fs-1"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">{{ event.author.get_full_name|default:event.author.username }}</h6>
+                                {% if event.author.email %}
+                                <a href="mailto:{{ event.author.email }}" class="text-decoration-none">
+                                    {{ event.author.email }}
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="d-flex justify-content-between border-top pt-4">
+                <a href="{% url 'events:events_all' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left me-1"></i> Все события
+                </a>
+                {% if user == event.author or user.is_staff %}
+                <div>
+                    <a href="{% url 'events:event_update' event.slug %}" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-pencil me-1"></i> Редактировать
+                    </a>
+                    <a href="{% url 'events:event_delete' event.slug %}" class="btn btn-outline-danger">
+                        <i class="bi bi-trash me-1"></i> Удалить
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

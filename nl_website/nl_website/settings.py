@@ -8,7 +8,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -22,8 +21,7 @@ except:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'novaya-lyada.ru']
 
 # Application definition
 
@@ -34,7 +32,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sslserver',
     'users',
+    'about_village',
+    'events',
+    'places',
+    'django_cleanup.apps.CleanupConfig',
+    'django_password_eye',
+    'django.contrib.sites',  # Обязательно для allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.vk',  # Провайдер VK
+    'allauth.socialaccount.providers.google',  # Провайдер Google
+
 
 ]
 
@@ -44,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -68,7 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'nl_website.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -78,7 +89,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -98,7 +108,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -109,7 +118,6 @@ TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -130,3 +138,43 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+DEFAULT_USER_IMAGE = MEDIA_URL + 'users/default.png'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Стандартный бэкенд Django
+    'allauth.account.auth_backends.AuthenticationBackend',  # Allauth бэкенд
+]
+
+SITE_ID = 1
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+
+LOGIN_REDIRECT_URL = 'http://localhost'
+LOGOUT_REDIRECT_URL = 'http://localhost'
+LOGIN_URL = 'users:login'
+
+
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # Разрешает HTTP
+os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '83239575347-h3hu8n3hpavsr2loog8871tqtmo41fr3.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}

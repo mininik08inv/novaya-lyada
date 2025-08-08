@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     {% load static %}
-    <title>Новая Ляда &mdash;</title>
+    <title>Новая Ляда</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -40,7 +40,6 @@
             <div class="row">
                 <div class="col-12">
 
-
                 </div>
 
             </div>
@@ -58,7 +57,7 @@
 
             <div class="site-logo">
                 <a href="{% url 'core:home' %}" class="text-black"><span class="text-primary"><img
-                        src="{% static 'images/logo/logo.png' %}" alt="" width="100"></span></a>
+                        src="{% static 'images/logo/logo.png' %}" alt="" width="90"></span></a>
             </div>
 
             <div class="col-12">
@@ -69,12 +68,12 @@
                         <li><a href="{% url 'core:about' %}" class="nav-link">О сайте</a></li>
 
                         <li class="has-children">
-                            <a href="#" class="nav-link">О посёлке</a>
+                            <a href="{% url 'about_village:about_village' %}" class="nav-link">О посёлке</a>
                             <ul class="dropdown arrow-top">
                                 <li><a href="#" class="nav-link">История</a></li>
                                 <li><a href="#" class="nav-link">Население</a></li>
                                 <li><a href="#" class="nav-link">Места</a></li>
-                                <li><a href="#" class="nav-link">Известные люди</a></li>
+                                <li><a href="{% url 'about_village:famous_person_all' %}" class="nav-link">Известные люди</a></li>
                                 <li><a href="#" class="nav-link">Контакты и карта</a></li>
                                 <!--                                    Вложенное меню оставлю для примера-->
                                 <!--                                    <li class="has-children">-->
@@ -88,10 +87,28 @@
                             </ul>
                         </li>
 
-                        <li><a href="#" class="nav-link">Новости</a></li>
+                        <li><a href="{% url 'events:events_all' %}" class="nav-link">Новости</a></li>
                         <li><a href="#" class="nav-link">Объявления</a></li>
-                        <li><a href="#" class="nav-link">Вместе сделаем поселок лучше!</a></li>
+                        <li><a href="#" class="nav-link">Идеи!</a></li>
+                        <li class="has-children">
+                            <a href="#" class="nav-link">USER</a>
+                            <ul class="dropdown arrow-top">
+                                {% if user.is_authenticated %}
+                                <li class="nav-link"><a href="{% url 'users:profile' %}">{{ user.username }}</a></li>
+                                <li class="nav-link">
+                                    <form action="{% url 'account_logout' %}" method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger">Выйти</button>
+                                    </form>
+                                </li>
+                                {% else %}
+                                <li><a class="nav-link" href="{% url 'account_login' %}">Войти</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
                     </ul>
+
+
                 </nav>
 
             </div>
@@ -124,15 +141,15 @@
             <div class="col-md-4 ml-auto">
 
                 <div class="mb-5">
-                    <h2 class="footer-heading mb-4">Subscribe to Newsletter</h2>
+                    <h2 class="footer-heading mb-4">Подпишитесь на рассылку</h2>
                     <form action="#" method="post" class="footer-suscribe-form">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control border-secondary text-white bg-transparent"
-                                   placeholder="Enter Email" aria-label="Enter Email"
+                                   placeholder="Ваш Email" aria-label="Enter Email"
                                    aria-describedby="button-addon2">
                             <div class="input-group-append">
                                 <button class="btn btn-primary text-white" type="button" id="button-addon2">
-                                    Subscribe
+                                    Подписаться
                                 </button>
                             </div>
                         </div>
@@ -140,41 +157,25 @@
                 </div>
 
 
-                <h2 class="footer-heading mb-4">Follow Us</h2>
-                <a href="#about-section" class="smoothscroll pl-0 pr-3"><span class="icon-facebook"></span></a>
-                <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
+                <h2 class="footer-heading mb-4">Поддержите нас</h2>
+                <a href="#" class="pl-3 pr-3"><span class="icon-vk"></span></a>
                 <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-                <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
-                <a href="#" class="text-white"><span class="mr-2 text-white icon-envelope-open-o"></span> <span
-                        class="d-none d-md-inline-block">info@yourdomain.com</span></a>
-                <span class="mx-md-2 d-inline-block"></span>
-                <a href="#" class="text-white"><span class="mr-2 text-white icon-phone"></span> <span
-                        class="d-none d-md-inline-block">1+ (234) 5678 9101</span></a>
-
-
-                <div class="float-right">
-
-                    <a href="#" class="text-white"><span class="mr-2 text-white icon-twitter"></span> <span
-                            class="d-none d-md-inline-block">Twitter</span></a>
+                <a href="#" class="pl-3 pr-3"><span class="icon-telegram"></span></a>
+                <a href="#" class="pl-3 pr-3"><span class="fa-whatsapp"></span></a>
+                <a href="#" class="text-white"><span
+                        class="mr-2 text-white icon-envelope-open-o">mininik08inv@yandex.ru</span>
                     <span class="mx-md-2 d-inline-block"></span>
-                    <a href="#" class="text-white"><span class="mr-2 text-white icon-instagram"></span> <span
-                            class="d-none d-md-inline-block">Instagram</span></a>
-                </div>
-            </div>
-            <div class="row pt-5 mt-5 text-center">
-                <div class="col-md-12">
-                    <div class="border-top pt-5">
-                        <p class="copyright"><small>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-                            All rights reserved | This template is made with <i class="icon-heart text-danger"
-                                                                                aria-hidden="true"></i> by <a
-                                href="https://colorlib.com" target="_blank">Colorlib</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </small></p>
-                    </div>
-                </div>
+                    <a href="#" class="text-white"><span class="mr-2 text-white icon-phone">+79204880799</span>
 
+
+                        <!--                <div class="float-right">-->
+
+                        <!--                    <a href="#" class="text-white"><span class="mr-2 text-white icon-twitter"></span> <span-->
+                        <!--                            class="d-none d-md-inline-block">Twitter</span></a>-->
+                        <!--                    <span class="mx-md-2 d-inline-block"></span>-->
+                        <!--                    <a href="#" class="text-white"><span class="mr-2 text-white icon-instagram"></span> <span-->
+                        <!--                            class="d-none d-md-inline-block">Instagram</span></a>-->
+                        <!--                </div>-->
             </div>
         </div>
     </div>
@@ -192,6 +193,45 @@
 <script src="{% static 'js/aos.js' %}"></script>
 
 <script src="{% static 'js/main.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const header = document.querySelector('.site-navbar');
+        let lastScroll = 0;
+        const scrollThreshold = 100;
+        let ticking = false;
+
+        function updateHeaderVisibility() {
+            const currentScroll = window.pageYOffset;
+
+            // Для мобильных устройств учитываем touch-события
+            const isMobile = window.innerWidth <= 768;
+            const threshold = isMobile ? 50 : scrollThreshold;
+
+            if (currentScroll > lastScroll && currentScroll > threshold) {
+                header.classList.add('hide');
+            } else if (currentScroll < lastScroll) {
+                header.classList.remove('hide');
+            }
+
+            lastScroll = currentScroll;
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateHeaderVisibility);
+                ticking = true;
+            }
+        });
+
+        // Учитываем изменение размера окна
+        window.addEventListener('resize', function() {
+            header.classList.remove('hide');
+            lastScroll = window.pageYOffset;
+        });
+    });
+</script>
 
 
 </body>

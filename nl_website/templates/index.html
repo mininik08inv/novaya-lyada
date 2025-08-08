@@ -2,30 +2,17 @@
 {% load static %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="{% static 'images/carousel/1.jpg' %}" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-            <img src="{% static 'images/carousel/2.jpeg' %}" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-            <img src="{% static 'images/carousel/3.jpeg' %}" class="d-block w-100" alt="...">
-        </div>
-    </div>
-</div>
-<br>
-<hr class="hr-shelf">
 
 <section class="site-section">
     <div class="container">
         <div class="row">
             <div class="col-md-8 mx-auto blog-content">
-                <p class="lead">Краткое описание поселка</p>
-                <p><img src="{% static 'images/hero_2.jpg' %}" alt="Image" class="img-fluid"></p>
-                <p>Блок2</p>
-                <p>Блок 3</p>
+                <p class="lead">Кратко о нашем поселке</p>
+                <p><img src="{% static 'images/n_lyada.jpg' %}" alt="Image" class="img-fluid"></p>
+                <p>Основан в XVIII веке как сельское поселение, статус посёлка с 1938 года.</p>
+                <p>Находится в 15 км от Тамбова (в сторону Рассказово)</p>
+                <p>Находится в 15 км от Тамбова (в сторону Рассказово)</p>
+                <p>Находится в 15 км от Тамбова (в сторону Рассказово)</p>
                 <br>
                 <!--                Кнопка-->
                 <div style="display: flex; justify-content: flex-end;">
@@ -50,24 +37,67 @@
             </div>
             <div class="col-lg-8">
                 <ul class="list-unstyled">
+                    {% for event in events %}
                     <li class="mb-4">
-                        <h2 class="h4"><a href="press-single.html" class="text-black">(title) Заголовок новости из
+                        <h2 class="h4"><a href="{{ event.get_absolute_url }}" class="text-black">{{ event.title }}</a></h2>
+                        <div class="d-flex align-items-start">  <!-- Flex-контейнер -->
+                            <div class="flex-shrink-0">  <!-- Картинка не сжимается -->
+                                <img
+                                        src="{{ event.image.url }}"
+                                        class="img-fluid rounded"
+                                        style="width: 200px; height: auto;"
+                                >
+                            </div>
+                            <div class="flex-grow-1 ms-3">  <!-- Текст растягивается + отступ слева 1rem -->
+                                <span class="d-block text-secondary">{{ event.date_of_event }}</span>
+                                <p class="mb-0">{{ event.content|truncatechars:100 }}</p>
+                                <!-- mb-0 убирает отступ снизу -->
+                            </div>
+                        </div>
+                        <p class="link-read-post"><a href="{{ event.get_absolute_url }}">Читать пост</a></p>
+                    </li>
+                    <hr class="hr-shelf">
+                    {% endfor %}
+                </ul>
+                <br>
+
+                <div style="display: flex; justify-content: flex-end;">
+                    <a href="{% url 'events:events_all' %}"><button class="button-83" role="button">Все новости</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="site-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-5 mb-lg-0">
+                <div class="block-heading-1">
+                    <span>Объявления</span>
+                    <h2>Немного объявлений</h2>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <ul class="list-unstyled">
+                    <li class="mb-4">
+                        <h2 class="h4"><a href="press-single.html" class="text-black">(title) Заголовок объявления 1 из
                             модели</a></h2>
                         <span class="d-block text-secondary">Apr 19, 2019</span>
-                        <p>Текст новости из модели</p>
+                        <p>Текст объявления 1 из модели</p>
                     </li>
                     <li class="mb-4">
-                        <h2 class="h4"><a href="press-single.html" class="text-black">(title) Заголовок новости из
+                        <h2 class="h4"><a href="press-single.html" class="text-black">(title) Заголовок объявления 2 из
                             модели</a></h2>
                         <span class="d-block text-secondary">Apr 19, 2019</span>
-                        <p>Текст новости из модели</p>
+                        <p>Текст объявления 2 из модели</p>
 
                     </li>
                 </ul>
                 <br>
 
                 <div style="display: flex; justify-content: flex-end;">
-                    <button class="button-83" role="button">Все новости</button>
+                    <button class="button-83" role="button">Все объявления</button>
                 </div>
             </div>
         </div>

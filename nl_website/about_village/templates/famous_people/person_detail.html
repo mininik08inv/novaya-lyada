@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Хлебные крошки -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'about_village:famous_person_all' %}">Известные люди</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ human.last_name }} {{ human.first_name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Основная информация -->
+    <div class="row mb-5">
+        <!-- Фото -->
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="card border-0 shadow-sm">
+                {% if human.photo %}
+                <img src="{{ human.photo.url }}" class="card-img-top img-fluid rounded" alt="{{ human.last_name }}">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 300px;">
+                    <i class="bi bi-person-badge fs-1 text-muted"></i>
+                </div>
+                {% endif %}
+                <div class="card-body text-center">
+                    <h2 class="h4 card-title mb-0">{{ human.last_name }}</h2>
+                    <h3 class="h5 card-subtitle mt-1 text-muted">{{ human.first_name }} {{ human.patronymic|default_if_none:"" }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Биография -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <!-- Категории -->
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        {% for category in human.categories.all %}
+                        <span class="badge bg-primary">{{ category.name }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Основные данные -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                {% if human.birth_date %}
+                                <li class="list-group-item px-0">
+                                    <strong>Дата рождения:</strong> {{ human.birth_date|date:"d.m.Y" }}
+                                </li>
+                                {% endif %}
+                                {% if human.death_date %}
+                                <li class="list-group-item px-0">
+                                    <strong>Дата смерти:</strong> {{ human.death_date|date:"d.m.Y" }}
+                                </li>
+                                {% endif %}
+                                {% if human.place_of_birth %}
+                                <li class="list-group-item px-0">
+                                    <strong>Место рождения:</strong> {{ human.place_of_birth }}
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Биография -->
+                    <div class="mb-4">
+                        <h4 class="h5 mb-3">Биография</h4>
+                        <div class="text-content">
+                            {{ human.biography|linebreaks }}
+                            <p>{% lorem 300 w %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% if human.interesting_facts %}
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="h5 mb-3">Интересные факты</h4>
+            <div class="text-content">
+                {{ human.interesting_facts|linebreaks }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+    <!-- Кнопки управления -->
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'about_village:famous_person_all' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Назад к списку
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .text-content {
+        line-height: 1.8;
+    }
+    .text-content img {
+        max-width: 100%;
+        height: auto;
+        margin: 1rem 0;
+        border-radius: 0.25rem;
+    }
+</style>
+{% endblock %}
