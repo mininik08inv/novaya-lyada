@@ -40,11 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sslserver',
-    'users',
     'about_village',
     'events',
     'places',
     'advertisement',
+    'accounts',
     'django_cleanup.apps.CleanupConfig',
     'django_password_eye',
     'django.contrib.sites',  # Обязательно для allauth
@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.vk',  # Провайдер VK
     'allauth.socialaccount.providers.google',  # Провайдер Google
     'imagekit',
+    'celery',
 
 
 ]
@@ -146,8 +147,7 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'users.User'
-DEFAULT_USER_IMAGE = MEDIA_URL + 'users/default.png'
+
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Стандартный бэкенд Django
@@ -156,15 +156,16 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = 1
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# Allauth (new API)
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if not DEBUG else 'http'
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/profile/'
 LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = 'users:login'
+LOGIN_URL = 'account_login'
 
 
 # OAuthlib flags: only in DEBUG allow insecure transport
@@ -184,7 +185,15 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'access_type': 'online',
         }
-    }
+    },
+    'vk': {
+        'APP': {
+            'client_id': os.getenv('VK_CLIENT_ID', ''),
+            'secret': os.getenv('VK_CLIENT_SECRET', ''),
+            'key': ''
+        },
+        'SCOPE': ['email'],
+    },
 }
 
 # Email settings (console backend in DEBUG)
@@ -198,3 +207,14 @@ else:
     EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
     EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', '1') in ('1', 'true', 'yes', 'on')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
+
+# Celery
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/1')
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BEAT_SCHEDULE = {
+    'expire-advertisements-every-5-min': {
+        'task': 'advertisement.tasks.expire_advertisements',
+        'schedule': 300.0,
+    },
+}

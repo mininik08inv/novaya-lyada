@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="h3">{{ view.object|default:'Новое объявление' }}</h1>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <form method="post" enctype="multipart/form-data" class="card border-0 shadow-sm p-4">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div>{{ field|title }}: {{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% for f in form %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+                    {{ f }}
+                    {% if f.help_text %}<small class="form-text text-muted">{{ f.help_text }}</small>{% endif %}
+                    <div class="form-error">{{ f.errors }}</div>
+                </div>
+                {% endfor %}
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a href="{% url 'advertisement:advertisement_all' %}" class="btn btn-outline-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

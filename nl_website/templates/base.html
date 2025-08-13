@@ -89,13 +89,13 @@
                         </li>
 
                         <li><a href="{% url 'events:events_all' %}" class="nav-link">Новости</a></li>
-                        <li><a href="#" class="nav-link">Объявления</a></li>
+                        <li><a href="{% url 'advertisement:advertisement_all' %}" class="nav-link">Объявления</a></li>
                         <li><a href="#" class="nav-link">Идеи!</a></li>
                         <li class="has-children">
                             <a href="#" class="nav-link">USER</a>
                             <ul class="dropdown arrow-top">
                                 {% if user.is_authenticated %}
-                                <li class="nav-link"><a href="{% url 'users:profile' %}">{{ user.username }}</a></li>
+                                <li class="nav-link"><a href="{% url 'accounts:profile' %}">{{ user.username }}</a></li>
                                 <li class="nav-link">
                                     <form action="{% url 'account_logout' %}" method="post" style="display: inline;">
                                         {% csrf_token %}

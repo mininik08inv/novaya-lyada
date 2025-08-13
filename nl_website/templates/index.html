@@ -11,8 +11,7 @@
                 <p><img src="{% static 'images/n_lyada.jpg' %}" alt="Image" class="img-fluid"></p>
                 <p>Основан в XVIII веке как сельское поселение, статус посёлка с 1938 года.</p>
                 <p>Находится в 15 км от Тамбова (в сторону Рассказово)</p>
-                <p>Находится в 15 км от Тамбова (в сторону Рассказово)</p>
-                <p>Находится в 15 км от Тамбова (в сторону Рассказово)</p>
+                <p></p>
                 <br>
                 <!--                Кнопка-->
                 <div style="display: flex; justify-content: flex-end;">
@@ -80,24 +79,33 @@
             </div>
             <div class="col-lg-8">
                 <ul class="list-unstyled">
+                    {% for ad in ads %}
                     <li class="mb-4">
-                        <h2 class="h4"><a href="press-single.html" class="text-black">(title) Заголовок объявления 1 из
-                            модели</a></h2>
-                        <span class="d-block text-secondary">Apr 19, 2019</span>
-                        <p>Текст объявления 1 из модели</p>
+                        <h2 class="h4"><a href="{{ ad.get_absolute_url }}" class="text-black">{{ ad.title }}</a></h2>
+                        <div class="d-flex align-items-start">
+                            <div class="flex-shrink-0">
+                                {% if ad.image %}
+                                <img src="{{ ad.image.url }}" class="img-fluid rounded" style="width: 200px; height: auto;" alt="{{ ad.title }}">
+                                {% else %}
+                                <div class="bg-light d-flex align-items-center justify-content-center rounded" style="width: 200px; height: 120px;">
+                                    <span class="icon-image text-muted"></span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <span class="d-block text-secondary">{{ ad.created|date:"d.m.Y H:i" }}</span>
+                                <p class="mb-0">{{ ad.content|truncatechars:100 }}</p>
+                            </div>
+                        </div>
+                        <p class="link-read-post"><a href="{{ ad.get_absolute_url }}">Перейти к объявлению</a></p>
                     </li>
-                    <li class="mb-4">
-                        <h2 class="h4"><a href="press-single.html" class="text-black">(title) Заголовок объявления 2 из
-                            модели</a></h2>
-                        <span class="d-block text-secondary">Apr 19, 2019</span>
-                        <p>Текст объявления 2 из модели</p>
-
-                    </li>
+                    <hr class="hr-shelf">
+                    {% endfor %}
                 </ul>
                 <br>
 
                 <div style="display: flex; justify-content: flex-end;">
-                    <button class="button-83" role="button">Все объявления</button>
+                    <a href="{% url 'advertisement:advertisement_all' %}"><button class="button-83" role="button">Все объявления</button></a>
                 </div>
             </div>
         </div>

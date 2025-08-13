@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h1 class="h4 mb-3">Удалить объявление</h1>
+                    <p>Вы уверены, что хотите удалить «{{ object.title }}»?</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex gap-2 mt-3">
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                            <a href="{{ object.get_absolute_url }}" class="btn btn-outline-secondary">Отмена</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
