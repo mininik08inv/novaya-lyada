@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold">{{ title }}</h1>
+            <p class="lead text-muted">Все опубликованные события</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for event in events %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                {% if event.image %}
+                <img src="{{ event.image.url }}" class="card-img-top object-fit-cover" alt="{{ event.title }}"
+                     style="height: 200px;">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                     style="height: 200px;">
+                    <i class="bi bi-calendar-event fs-1 text-muted"></i>
+                </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-primary">{{ event.cat }}</span>
+                        <small class="text-muted">{{ event.date_of_event|date:"d M Y" }}</small>
+                    </div>
+
+                    <h3 class="h5 card-title">{{ event.title }}</h3>
+
+                    <p class="card-text text-muted">
+                        {{ event.content|truncatewords:20 }}
+                    </p>
+                </div>
+
+                <div class="card-footer bg-transparent border-0 pt-0">
+                    <a href="{{ event.get_absolute_url }}" class="btn btn-outline-primary stretched-link">
+                        Читать далее
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center py-4">
+                <i class="bi bi-info-circle fs-4"></i>
+                <p class="mb-0 mt-2">Событий пока нет. Проверьте позже.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперед</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+    <a href="{% url 'events:add_event' %}" class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left me-1"></i> Добавить событие
+    </a>
+</div>
+{% endblock content %}

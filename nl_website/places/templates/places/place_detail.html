@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Хлебные крошки -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'places:all_places' %}">Все места</a></li>
+            {% for category in place.categories.all %}
+                <li class="breadcrumb-item"><a href="{% url 'places:all_places' %}?category={{ category.slug }}">{{ category.name }}</a></li>
+            {% endfor %}
+            <li class="breadcrumb-item active" aria-current="page">{{ place.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Основная информация о месте -->
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <!-- Галерея фотографий -->
+            <div class="mb-4">
+                {% if place.photos.all %}
+                    <div id="placeGallery" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner rounded-3">
+                            {% for photo in place.photos.all %}
+                                <div class="carousel-item {% if forloop.first or photo.is_main %}active{% endif %}">
+                                    <img src="{{ photo.photo.url }}" class="d-block w-100" alt="{{ place.name }}" style="height: 500px; object-fit: cover;">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <a class="carousel-control-prev" href="#placeGallery" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#placeGallery" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 500px;">
+                        <i class="bi bi-image fs-1 text-muted"></i>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Категории -->
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                {% for category in place.categories.all %}
+                    <a href="{% url 'places:all_places' %}?category={{ category.slug }}" class="badge bg-primary text-decoration-none">
+                        {{ category.name }}
+                    </a>
+                {% endfor %}
+            </div>
+
+            <!-- Описание места -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h1 class="h2 card-title">{{ place.name }}</h1>
+                    <div class="d-flex align-items-center text-muted mb-3">
+                        <i class="bi bi-geo-alt me-2"></i>
+                        <span>{{ place.address }}</span>
+                    </div>
+                    <div class="card-text">{{ place.description|linebreaks }}</div>
+                </div>
+            </div>
+
+            <!-- Карта -->
+            {% if place.latitude and place.longitude %}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h2 class="h5 card-title mb-3">Расположение на карте</h2>
+                    <div id="map" style="height: 400px; width: 100%;"
+                         data-lat="{{ place.latitude }}"
+                         data-lng="{{ place.longitude }}"
+                         data-name="{{ place.name }}"></div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Информация о месте -->
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h2 class="h5 card-title mb-3">Информация</h2>
+
+                    <div class="mb-3">
+                        <h3 class="h6">Адрес</h3>
+                        <p class="mb-0">{{ place.address }}</p>
+                    </div>
+
+                    {% if place.latitude and place.longitude %}
+                    <div class="mb-3">
+                        <h3 class="h6">Координаты</h3>
+                        <p class="mb-0">{{ place.latitude|floatformat:6 }}, {{ place.longitude|floatformat:6 }}</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <h3 class="h6">Дата добавления</h3>
+                        <p class="mb-0">{{ place.created_at|date:"d.m.Y" }}</p>
+                    </div>
+
+                    {% if place.author %}
+                    <div class="mb-3">
+                        <h3 class="h6">Автор</h3>
+                        <p class="mb-0">{{ place.author.get_full_name|default:place.author.username }}</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Средний рейтинг -->
+                    <div class="mb-3">
+                        <h3 class="h6">Рейтинг</h3>
+                        <div class="d-flex align-items-center">
+                            {% with avg_rating=place.get_average_rating %}
+                                {% for i in "12345" %}
+                                    <i class="bi bi-star{% if forloop.counter <= avg_rating|floatformat:0 %}-fill text-warning{% endif %}"></i>
+                                {% endfor %}
+                                <span class="ms-2">({{ place.reviews.count }} отзывов)</span>
+                            {% endwith %}
+                        </div>
+                    </div>
+
+                    <!-- Кнопки действий -->
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#addReviewModal">
+                            <i class="bi bi-pencil-square me-2"></i>Оставить отзыв
+                        </a>
+                        {% if place.latitude and place.longitude %}
+                        <a href="https://maps.google.com?q={{ place.latitude }},{{ place.longitude }}"
+                           target="_blank"
+                           class="btn btn-outline-primary">
+                            <i class="bi bi-map me-2"></i>Открыть в картах
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Отзывы -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h4 card-title mb-4">Отзывы посетителей</h2>
+
+                    {% if place.reviews.all %}
+                        {% for review in place.reviews.all %}
+                        <div class="mb-4 pb-4 {% if not forloop.last %}border-bottom{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <h3 class="h6 mb-0">{{ review.author.get_full_name|default:review.author.username }}</h3>
+                                    <small class="text-muted">{{ review.created_at|date:"d.m.Y" }}</small>
+                                </div>
+                                <div>
+                                    {% for i in "12345" %}
+                                        <i class="bi bi-star{% if forloop.counter <= review.rating %}-fill text-warning{% endif %}"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="mb-0">{{ review.text|linebreaks }}</p>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-chat-square-text fs-1 text-muted mb-3"></i>
+                            <p class="mb-0">Пока нет отзывов. Будьте первым!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для добавления отзыва -->
+<div class="modal fade" id="addReviewModal" tabindex="-1" role="dialog" aria-labelledby="addReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addReviewModalLabel">Оставить отзыв</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form method="post" action="{% url 'places:add_review' place_slug=place.slug %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Ваша оценка</label>
+                        <select class="form-control" id="rating" name="rating" required>
+                            <option value="" selected disabled>Выберите оценку</option>
+                            <option value="5">5 - Отлично</option>
+                            <option value="4">4 - Хорошо</option>
+                            <option value="3">3 - Удовлетворительно</option>
+                            <option value="2">2 - Плохо</option>
+                            <option value="1">1 - Ужасно</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Текст отзыва</label>
+                        <textarea class="form-control" id="text" name="text" rows="5" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .carousel-item img {
+        object-fit: cover;
+    }
+    .sticky-top {
+        z-index: 1;
+    }
+    .badge {
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Инициализация карты
+    document.addEventListener('DOMContentLoaded', function() {
+        const mapElement = document.getElementById('map');
+        if (mapElement) {
+            const lat = parseFloat(mapElement.dataset.lat);
+            const lng = parseFloat(mapElement.dataset.lng);
+            const name = mapElement.dataset.name;
+
+            // Здесь должен быть код инициализации карты (Google Maps, Яндекс.Карты или Leaflet)
+            console.log(`Инициализация карты для ${name} с координатами ${lat}, ${lng}`);
+        }
+    });
+</script>
+{% endblock %}
