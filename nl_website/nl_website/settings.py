@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'about_village',
     'events',
     'places',
-    'adventrisement',
+    'advertisement',
     'django_cleanup.apps.CleanupConfig',
     'django_password_eye',
     'django.contrib.sites',  # Обязательно для allauth
