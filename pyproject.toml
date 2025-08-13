@@ -8,9 +8,10 @@ dependencies = [
     "django-allauth>=65.10.0",
     "django-cleanup>=9.0.0",
     "django-password-eye>=1.1.4",
-    "django-pytest>=0.2.0",
+    # tests
+    "pytest-django>=4.9.0",
     "django-sslserver-v2>=1.0",
-    "dotenv>=0.9.9",
+    "python-dotenv>=1.0.1",
     "pillow>=11.3.0",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",

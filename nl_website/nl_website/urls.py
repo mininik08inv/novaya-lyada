@@ -9,6 +9,7 @@ urlpatterns = [
     path('users/', include('users.urls', namespace="users")),
     path('events/', include('events.urls', namespace="events")),
     path('about-village/', include('about_village.urls', namespace="about_village")),
+    path('places/', include('places.urls', namespace="places")),
     path('accounts/', include('allauth.urls')),
 ]
 if settings.DEBUG:

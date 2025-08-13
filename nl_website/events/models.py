@@ -50,6 +50,7 @@ class Event(models.Model):
         unique=True,
         db_index=True,
         verbose_name="Slug",
+        allow_unicode=True,
         validators=[
             MinLengthValidator(5, message="Минимум 5 символов"),
             MaxLengthValidator(100, message="Максимум 100 символов"),
@@ -93,7 +94,9 @@ class Event(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = slugify(self.title, allow_unicode=True)
+        # Ensure field validators and constraints are enforced at model level
+        self.full_clean()
         try:
             super().save(*args, **kwargs)
         except Exception as e:

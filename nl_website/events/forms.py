@@ -10,7 +10,7 @@ class AddEventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['title', 'content', 'image', 'status', 'cat', 'author']
+        fields = ['title', 'content', 'image', 'status', 'cat']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-input'}),
             'content': forms.Textarea(attrs={'cols': 50, 'rows': 5}),

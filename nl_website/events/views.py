@@ -50,7 +50,7 @@ class UpdateEvent(PermissionRequiredMixin, UpdateView):
 class AddEvent(LoginRequiredMixin, CreateView):
     model = Event
     fields = ['title', 'content', 'image', 'status', 'cat']
-    template_name = 'events/addpage.html'
+    template_name = 'events/addevent.html'
     success_url = reverse_lazy('events:events_all')  # Убедитесь, что это правильный URL
 
     def form_valid(self, form):

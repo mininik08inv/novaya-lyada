@@ -9,5 +9,4 @@ urlpatterns = [
     path('event/<slug:event_slug>/', views.ShowEvent.as_view(), name='event_detail'),
     path('event_update/<slug:event_slug>/', views.UpdateEvent.as_view(), name='event_update'),
     path('add_event/', views.AddEvent.as_view(), name='add_event'),
-    path('event_delete/<slug:event_slug>/', views.ShowEvent.as_view(), name='event_delete'),
 ]
