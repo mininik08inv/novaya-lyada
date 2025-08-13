@@ -17,6 +17,7 @@ dependencies = [
     "pytest-cov>=6.2.1",
     "requests>=2.32.4",
     "social-auth-app-django>=5.5.1",
+    "django-imagekit>=5.0.0",
 ]
 
 [dependency-groups]

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'about_village',
     'events',
     'places',
+    'adventrisement',
     'django_cleanup.apps.CleanupConfig',
     'django_password_eye',
     'django.contrib.sites',  # Обязательно для allauth
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.vk',  # Провайдер VK
     'allauth.socialaccount.providers.google',  # Провайдер Google
+    'imagekit',
 
 
 ]
