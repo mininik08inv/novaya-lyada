@@ -133,10 +133,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-if len(sys.argv) > 1 and sys.argv[1] == 'runserver':
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
-else:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # каталог размещения медиа-файлов (для загрузки и чтения)
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

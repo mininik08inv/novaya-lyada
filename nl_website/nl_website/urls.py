@@ -15,3 +15,12 @@ urlpatterns = [
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Подача статических файлов из STATICFILES_DIRS
+    from django.contrib.staticfiles.views import serve
+    from django.urls import re_path
+    import os
+    
+    # Добавляем обслуживание статических файлов
+    urlpatterns += [
+        re_path(r'^static/(?P<path>.*)$', serve, {'document_root': os.path.join(settings.BASE_DIR, 'static')}),
+    ]

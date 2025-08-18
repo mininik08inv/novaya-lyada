@@ -6,6 +6,9 @@ app_name = "about_village"
 
 urlpatterns = [
     path('', views.AboutVillage.as_view(), name='about_village'),
+    path('history/', views.HistoryPage.as_view(), name='history'),
+    path('history/book/', views.HistoryBookPage.as_view(), name='history_book'),
+    path('history/image/<str:image_name>/', views.serve_book_image, name='book_image'),
     path('famous-persons/', views.FamousPeopleAll.as_view(), name='famous_person_all'),
     path('persons/<slug:person_slug>/', views.PersonDetail.as_view(), name='person_detail'),
 

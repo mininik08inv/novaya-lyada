@@ -68,9 +68,9 @@
                         <li><a href="{% url 'core:about' %}" class="nav-link">О сайте</a></li>
 
                         <li class="has-children">
-                            <a href="{% url 'about_village:about_village' %}" class="nav-link">О посёлке</a>
+                            <a href="#" class="nav-link">О посёлке</a>
                             <ul class="dropdown arrow-top">
-                                <li><a href="#" class="nav-link">История</a></li>
+                                <li><a href="{% url 'about_village:history' %}" class="nav-link">История</a></li>
                                 <li><a href="#" class="nav-link">Население</a></li>
                                 <li><a href="{% url 'places:all_places' %}" class="nav-link">Места</a></li>
                                 <li><a href="{% url 'about_village:famous_person_all' %}" class="nav-link">Известные
