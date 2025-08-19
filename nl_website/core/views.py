@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from events.models import Event
 from advertisement.models import Advertisement
+from ideas.models import ImprovementIdea
 
 
 # Create your views here.
@@ -13,10 +14,23 @@ class IndexPage(TemplateView):
         context = super().get_context_data(**kwargs)
         context['events'] = Event.published.all()[:3]
         context['ads'] = Advertisement.published.all()[:3]
+        context['ideas'] = ImprovementIdea.objects.filter(
+            status__in=['collection', 'pending', 'approved', 'implemented']
+        ).order_by('-created_at')[:3]
         return context
 
 
 class AboutPage(TemplateView):
     template_name = 'about.html'
     extra_context = {"title": "О сайте"}
+
+
+class PrivacyPage(TemplateView):
+    template_name = 'privacy.html'
+    extra_context = {"title": "Политика конфиденциальности"}
+
+
+class TermsPage(TemplateView):
+    template_name = 'terms.html'
+    extra_context = {"title": "Условия использования"}
 

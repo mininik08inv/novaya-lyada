@@ -22,12 +22,14 @@ if not SECRET_KEY:
 _debug_env = os.getenv("DEBUG", "0").lower()
 DEBUG = _debug_env in ("1", "true", "yes", "on")
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'novaya-lyada.ru', 'www.novaya-lyada.ru']
+ALLOWED_HOSTS = ['dev.novaya-lyada.local', 'localhost', '127.0.0.1', 'novaya-lyada.ru', 'www.novaya-lyada.ru']
 
 # CSRF
 CSRF_TRUSTED_ORIGINS = [
     'https://novaya-lyada.ru',
     'https://www.novaya-lyada.ru',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
 ]
 
 # Application definition
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'events',
     'places',
     'advertisement',
+    'ideas',
     'accounts',
     'django_cleanup.apps.CleanupConfig',
     'django_password_eye',
@@ -159,7 +162,7 @@ ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if not DEBUG else 'http'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if not DEBUG else 'https'  # VK требует HTTPS
 
 LOGIN_REDIRECT_URL = '/profile/'
 LOGOUT_REDIRECT_URL = '/'
@@ -182,7 +185,9 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {
             'access_type': 'online',
-        }
+        },
+        # Настройки для извлечения данных пользователя
+        'FETCH_USERINFO': True,
     },
     'vk': {
         'APP': {
@@ -191,8 +196,19 @@ SOCIALACCOUNT_PROVIDERS = {
             'key': ''
         },
         'SCOPE': ['email'],
+        'METHOD': 'oauth2',
+        'VERSION': '5.131',
     },
 }
+
+# Дополнительные настройки для социальной авторизации
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = ACCOUNT_EMAIL_VERIFICATION
+
+# Автоматическое связывание аккаунтов по email
+SOCIALACCOUNT_ADAPTER = 'allauth.socialaccount.adapter.DefaultSocialAccountAdapter'
 
 # Email settings (console backend in DEBUG)
 if DEBUG:
