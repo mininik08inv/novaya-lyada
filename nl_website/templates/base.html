@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
 
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'css/jquery.fancybox.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
@@ -19,6 +21,9 @@
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_css %}
+    {% endblock %}
 
 </head>
 <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
@@ -90,7 +95,7 @@
 
                         <li><a href="{% url 'events:events_all' %}" class="nav-link">Новости</a></li>
                         <li><a href="{% url 'advertisement:advertisement_all' %}" class="nav-link">Объявления</a></li>
-                        <li><a href="#" class="nav-link">Идеи!</a></li>
+                        <li><a href="{% url 'ideas:all_ideas' %}" class="nav-link">Идеи!</a></li>
                         <li class="has-children">
                             <a href="#" class="nav-link">USER</a>
                             <ul class="dropdown arrow-top">
@@ -231,6 +236,8 @@
     });
 </script>
 
+{% block extra_js %}
+{% endblock %}
 
 </body>
 </html>
