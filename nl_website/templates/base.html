@@ -68,12 +68,13 @@
                         <li><a href="{% url 'core:about' %}" class="nav-link">О сайте</a></li>
 
                         <li class="has-children">
-                            <a href="{% url 'about_village:about_village' %}" class="nav-link">О посёлке</a>
+                            <a href="#" class="nav-link">О посёлке</a>
                             <ul class="dropdown arrow-top">
-                                <li><a href="#" class="nav-link">История</a></li>
+                                <li><a href="{% url 'about_village:history' %}" class="nav-link">История</a></li>
                                 <li><a href="#" class="nav-link">Население</a></li>
                                 <li><a href="{% url 'places:all_places' %}" class="nav-link">Места</a></li>
-                                <li><a href="{% url 'about_village:famous_person_all' %}" class="nav-link">Известные люди</a></li>
+                                <li><a href="{% url 'about_village:famous_person_all' %}" class="nav-link">Известные
+                                    люди</a></li>
                                 <li><a href="#" class="nav-link">Контакты и карта</a></li>
                                 <!--                                    Вложенное меню оставлю для примера-->
                                 <!--                                    <li class="has-children">-->
@@ -88,13 +89,13 @@
                         </li>
 
                         <li><a href="{% url 'events:events_all' %}" class="nav-link">Новости</a></li>
-                        <li><a href="#" class="nav-link">Объявления</a></li>
+                        <li><a href="{% url 'advertisement:advertisement_all' %}" class="nav-link">Объявления</a></li>
                         <li><a href="#" class="nav-link">Идеи!</a></li>
                         <li class="has-children">
                             <a href="#" class="nav-link">USER</a>
                             <ul class="dropdown arrow-top">
                                 {% if user.is_authenticated %}
-                                <li class="nav-link"><a href="{% url 'users:profile' %}">{{ user.username }}</a></li>
+                                <li class="nav-link"><a href="{% url 'accounts:profile' %}">{{ user.username }}</a></li>
                                 <li class="nav-link">
                                     <form action="{% url 'account_logout' %}" method="post" style="display: inline;">
                                         {% csrf_token %}
@@ -166,16 +167,6 @@
                         class="mr-2 text-white icon-envelope-open-o">mininik08inv@yandex.ru</span>
                     <span class="mx-md-2 d-inline-block"></span>
                     <a href="#" class="text-white"><span class="mr-2 text-white icon-phone">+79204880799</span>
-
-
-                        <!--                <div class="float-right">-->
-
-                        <!--                    <a href="#" class="text-white"><span class="mr-2 text-white icon-twitter"></span> <span-->
-                        <!--                            class="d-none d-md-inline-block">Twitter</span></a>-->
-                        <!--                    <span class="mx-md-2 d-inline-block"></span>-->
-                        <!--                    <a href="#" class="text-white"><span class="mr-2 text-white icon-instagram"></span> <span-->
-                        <!--                            class="d-none d-md-inline-block">Instagram</span></a>-->
-                        <!--                </div>-->
             </div>
         </div>
     </div>
@@ -186,11 +177,11 @@
 <script src="{% static 'js/popper.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script>
-  // Ensure carousel initialized (Bootstrap 4 API)
-  $(function() {
-    $('#placeGallery').carousel({ interval: 5000 });
-    $('.dropdown-toggle').dropdown();
-  });
+    // Ensure carousel initialized (Bootstrap 4 API)
+    $(function() {
+      $('#placeGallery').carousel({ interval: 5000 });
+      $('.dropdown-toggle').dropdown();
+    });
 </script>
 <script src="{% static 'js/owl.carousel.min.js' %}"></script>
 <script src="{% static 'js/jquery.sticky.js' %}"></script>
