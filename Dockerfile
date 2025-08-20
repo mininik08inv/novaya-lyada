@@ -26,8 +26,10 @@ RUN pip install uv
 # Устанавливаем зависимости через uv
 RUN uv sync --frozen
 
-# Копируем весь проект
+# Копируем весь проект (НО НЕ .venv!)
 COPY . .
+RUN rm -rf .venv  # Удаляем скопированное .venv
+RUN uv sync --frozen  # Пересоздаем .venv
 
 # Создаем непривилегированного пользователя
 RUN adduser --disabled-password --gecos '' appuser && \
