@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Хлебные крошки -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'ideas:all_ideas' %}">Все идеи</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Предложить идею</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h1 class="h2 mb-3">{{ title_page }}</h1>
+                        <p class="text-muted">Поделитесь своей идеей по улучшению Новой Ляды</p>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row g-3">
+                            <!-- Название идеи -->
+                            <div class="col-12">
+                                <label for="{{ form.title.id_for_label }}" class="form-label">
+                                    <strong>{{ form.title.label }}</strong>
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.title.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">Краткое и понятное название вашей идеи</small>
+                            </div>
+
+                            <!-- Категория -->
+                            <div class="col-md-6">
+                                <label for="{{ form.category.id_for_label }}" class="form-label">
+                                    <strong>{{ form.category.label }}</strong>
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.category }}
+                                {% if form.category.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.category.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Местоположение -->
+                            <div class="col-md-6">
+                                <label for="{{ form.location.id_for_label }}" class="form-label">
+                                    <strong>{{ form.location.label }}</strong>
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.location }}
+                                {% if form.location.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.location.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">Укажите конкретное место в поселке</small>
+                            </div>
+
+                            <!-- Описание проблемы -->
+                            <div class="col-12">
+                                <label for="{{ form.description.id_for_label }}" class="form-label">
+                                    <strong>{{ form.description.label }}</strong>
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.description.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">Подробно опишите проблему или идею для улучшения</small>
+                            </div>
+
+                            <!-- Предлагаемое решение -->
+                            <div class="col-12">
+                                <label for="{{ form.proposed_solution.id_for_label }}" class="form-label">
+                                    <strong>{{ form.proposed_solution.label }}</strong>
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.proposed_solution }}
+                                {% if form.proposed_solution.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.proposed_solution.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">Как вы предлагаете решить эту проблему?</small>
+                            </div>
+
+                            <!-- Изображение -->
+                            <div class="col-12">
+                                <label for="{{ form.image.id_for_label }}" class="form-label">
+                                    <strong>{{ form.image.label }}</strong>
+                                </label>
+                                {{ form.image }}
+                                {% if form.image.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.image.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">Добавьте фото для наглядности (необязательно)</small>
+                            </div>
+                        </div>
+
+                        <!-- Информационное сообщение -->
+                        <div class="alert alert-info mt-4">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Важная информация:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Ваша идея будет отправлена на модерацию</li>
+                                <li>После одобрения она появится в общем списке</li>
+                                <li>Все поля, отмеченные <span class="text-danger">*</span>, обязательны для заполнения</li>
+                                <li>Пожалуйста, будьте конструктивны и вежливы</li>
+                            </ul>
+                        </div>
+
+                        <!-- Кнопки -->
+                        <div class="d-flex gap-3 justify-content-end mt-4">
+                            <a href="{% url 'ideas:all_ideas' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Отмена
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-send"></i> Отправить идею
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border-radius: 0.75rem;
+    }
+    .form-control, .form-select {
+        border-radius: 0.5rem;
+    }
+    .btn {
+        border-radius: 0.5rem;
+    }
+    .alert {
+        border-radius: 0.5rem;
+    }
+</style>
+{% endblock %}
