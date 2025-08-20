@@ -12,7 +12,7 @@
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/website_about_Novaya_Lyada.git
-cd website_about_Novaya_Lyada
+cd novaya-lyada
 ```
 
 ### 2. Создание виртуального окружения
