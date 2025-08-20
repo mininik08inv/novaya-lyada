@@ -1,0 +1,80 @@
+# Git
+.git
+.gitignore
+.github
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.pytest_cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+media
+
+# Environment files
+.env
+.env.*
+!.env.example
+env_example.txt
+
+# Documentation
+*.md
+
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+backups/
+ssl/
+staticfiles/
+node_modules/
+book_extracted/
+book_images/
+
+# Scripts (не нужны в контейнере)
+scripts/
+setup_*.sh
+run_*.sh
+start_*.py
+test_*.html
+debug_*.py
+check_*.py
+add_*.py
+
+# Development files
+uv.lock
+pyproject.toml

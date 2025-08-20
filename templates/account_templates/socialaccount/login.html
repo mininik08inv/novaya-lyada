@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body text-center">
+          <h1 class="h3 mb-4">Вход через социальные сети</h1>
+          
+          {% get_providers as socialaccount_providers %}
+          
+          {% if socialaccount_providers %}
+            <p class="text-muted mb-4">Выберите способ входа:</p>
+            
+            {% for provider in socialaccount_providers %}
+              {% if provider.id == "google" %}
+                <a href="{% provider_login_url provider.id %}" 
+                   class="btn btn-outline-danger d-block mb-3 d-flex align-items-center justify-content-center">
+                  <i class="bi bi-google me-2"></i>
+                  Войти через Google
+                </a>
+              {% elif provider.id == "vk" %}
+                <a href="{% provider_login_url provider.id %}"
+                   class="btn btn-outline-primary d-block mb-3 d-flex align-items-center justify-content-center">
+                  <i class="bi bi-vk me-2" style="color: #4C75A3;"></i>
+                  Войти через VK
+                </a>
+              {% endif %}
+            {% endfor %}
+            
+            <hr class="my-4">
+            <p class="text-muted mb-3">Или используйте стандартную форму входа</p>
+            <a class="btn btn-link" href="{% url 'account_login' %}">Войти по email/паролю</a>
+            
+          {% else %}
+            <div class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle"></i>
+              Социальная авторизация временно недоступна
+            </div>
+            <a class="btn btn-primary" href="{% url 'account_login' %}">Войти по email/паролю</a>
+          {% endif %}
+          
+          <hr class="my-4">
+          <p class="text-muted mb-0">
+            Нет аккаунта? 
+            <a href="{% url 'account_signup' %}" class="text-decoration-none">Зарегистрируйтесь</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

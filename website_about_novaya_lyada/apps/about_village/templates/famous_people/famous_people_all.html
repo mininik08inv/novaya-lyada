@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold">{{ title_page }}</h1>
+            <p class="lead text-muted">Все известные люди нашего региона</p>
+        </div>
+    </div>
+
+    <!-- Фильтр по категориям -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Фильтр по категориям</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{% url 'about_village:famous_person_all' %}"
+                           class="btn btn-sm {% if not cat_selected %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                            Все категории
+                        </a>
+                        {% for cat in all_categories %}
+                        <a href="{% url 'about_village:famous_person_all' %}?cat={{ cat.id }}"
+                           class="btn btn-sm {% if cat_selected.id == cat.id %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                            {{ cat.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if cat_selected %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-primary d-flex align-items-center">
+                <i class="bi bi-filter-circle me-2"></i>
+                <span>Фильтр: {{ cat_selected.name }}</span>
+                <a href="{% url 'about_village:famous_person_all' %}" class="ms-3 btn btn-sm btn-outline-primary">
+                    Сбросить фильтр
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+        {% for human in people %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                {% if human.photo %}
+                <img src="{{ human.photo.url }}" class="card-img-top object-fit-cover" alt="{{ human.last_name }}"
+                     style="height: 200px; object-position: top;">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                     style="height: 200px;">
+                    <i class="bi bi-person-badge fs-1 text-muted"></i>
+                </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        {% for category in human.categories.all %}
+                        <a href="{% url 'about_village:famous_person_all' %}?cat={{ category.id }}"
+                           class="badge bg-primary text-decoration-none">
+                            {{ category.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+
+                    <h3 class="h5 card-title">
+                        {{ human.last_name }} {{ human.first_name }} {{ human.patronymic|default_if_none:"" }}
+                    </h3>
+
+                    <p class="card-text text-muted">
+                        {{ human.biography|truncatechars:120|default:"Информация скоро будет добавлена..." }}
+                    </p>
+                </div>
+
+                <div class="card-footer bg-transparent border-0 pt-0">
+                    <a href="{{ human.get_absolute_url }}" class="btn btn-outline-primary stretched-link">
+                        Подробнее <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center py-4">
+                <i class="bi bi-info-circle fs-4"></i>
+                <p class="mb-0 mt-2">Известные люди пока не добавлены. Проверьте позже.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ page_obj.previous_page_number }}{% if cat_selected %}&cat={{ cat_selected.id }}{% endif %}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}{% if cat_selected %}&cat={{ cat_selected.id }}{% endif %}">
+                    {{ num }}
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ page_obj.next_page_number }}{% if cat_selected %}&cat={{ cat_selected.id }}{% endif %}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock content %}
+
+{% block extra_css %}
+<style>
+    .hover-shadow {
+        transition: all 0.3s ease;
+    }
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .object-fit-cover {
+        object-fit: cover;
+    }
+</style>
+{% endblock %}

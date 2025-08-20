@@ -1,0 +1,5 @@
+# Production requirements
+-r base.txt
+
+# Production specific packages
+# (Add any production-specific packages here)

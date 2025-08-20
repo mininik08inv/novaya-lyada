@@ -1,0 +1,380 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Скрытое поле для CSRF токена -->
+{% csrf_token %}
+<div class="container py-5">
+    <!-- Хлебные крошки -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'ideas:all_ideas' %}">Все идеи</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ idea.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Основной контент -->
+        <div class="col-lg-8">
+            <!-- Заголовок и мета-информация -->
+            <div class="card border-0 shadow-sm mb-4">
+                {% if idea.image %}
+                <img src="{{ idea.image.url }}" class="card-img-top" alt="{{ idea.title }}">
+                {% endif %}
+                
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="badge 
+                                {% if idea.status == 'pending' %}bg-warning
+                                {% elif idea.status == 'approved' %}bg-success
+                                {% elif idea.status == 'implemented' %}bg-primary
+                                {% else %}bg-secondary{% endif %} mb-2">
+                                {{ idea.get_status_display }}
+                            </span>
+                            <span class="badge bg-outline-primary mb-2 ms-1">
+                                {{ idea.get_category_display }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <h1 class="h2 card-title mb-3">{{ idea.title }}</h1>
+                    
+                    <div class="text-muted mb-3">
+                        <small>
+                            {% if idea.author %}
+                            <i class="bi bi-person me-1"></i> {{ idea.author.get_full_name|default:idea.author.username }} |
+                            {% endif %}
+                            <i class="bi bi-geo-alt me-1"></i> {{ idea.location }} |
+                            <i class="bi bi-calendar3 me-1"></i> {{ idea.created_at|date:"d E Y, H:i" }}
+                        </small>
+                    </div>
+
+                    <div class="card-text">
+                        <h5>Описание проблемы:</h5>
+                        <p>{{ idea.description|linebreaks }}</p>
+                        
+                        <h5>Предлагаемое решение:</h5>
+                        <p>{{ idea.proposed_solution|linebreaks }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Мобильная панель голосования (показывается только на мобильных) -->
+            <div class="card border-0 shadow-sm mb-4 d-lg-none" id="mobile-voting-panel">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Оценка идеи</h5>
+                    
+                    {% if user.is_authenticated %}
+                    <div class="d-flex justify-content-center gap-3 mb-3">
+                        <button class="btn btn-vote {% if user_vote == 'up' %}btn-success active{% else %}btn-outline-success{% endif %}" 
+                                data-vote-type="up" data-idea-slug="{{ idea.slug }}">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                            <span class="vote-count">{{ votes_up }}</span>
+                        </button>
+                        <button class="btn btn-vote {% if user_vote == 'down' %}btn-danger active{% else %}btn-outline-danger{% endif %}" 
+                                data-vote-type="down" data-idea-slug="{{ idea.slug }}">
+                            <i class="bi bi-hand-thumbs-down"></i>
+                            <span class="vote-count">{{ votes_down }}</span>
+                        </button>
+                    </div>
+                    {% else %}
+                    <div class="d-flex justify-content-center gap-3 mb-3">
+                        <div class="btn btn-outline-success">
+                            <i class="bi bi-hand-thumbs-up"></i> {{ votes_up }}
+                        </div>
+                        <div class="btn btn-outline-danger">
+                            <i class="bi bi-hand-thumbs-down"></i> {{ votes_down }}
+                        </div>
+                    </div>
+                    <p class="small text-muted">
+                        <a href="{% url 'account_login' %}">Войдите</a>, чтобы проголосовать.
+                    </p>
+                    {% endif %}
+                    
+                    <small class="text-muted">
+                        Всего голосов: <strong id="mobile-total-votes">{{ total_votes }}</strong>
+                    </small>
+                </div>
+            </div>
+
+            <!-- Комментарии -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">
+                        <i class="bi bi-chat-dots"></i> Комментарии ({{ comments.count }})
+                    </h4>
+
+                    {% if user.is_authenticated %}
+                    <!-- Форма добавления комментария -->
+                    <div class="mb-4 p-3 bg-light rounded">
+                        <h6>Добавить комментарий:</h6>
+                        <form method="post" action="{% url 'ideas:add_comment' idea.slug %}">
+                            {% csrf_token %}
+                            {{ comment_form.text }}
+                            <div class="mt-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-send"></i> Отправить
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info mb-4">
+                        <i class="bi bi-info-circle"></i>
+                        <a href="{% url 'account_login' %}">Войдите</a>, чтобы оставить комментарий.
+                    </div>
+                    {% endif %}
+
+                    <!-- Список комментариев -->
+                    {% for comment in comments %}
+                    <div class="border-bottom pb-3 mb-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>{{ comment.author.get_full_name|default:comment.author.username }}</strong>
+                                <small class="text-muted ms-2">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
+                            </div>
+                        </div>
+                        <p class="mt-2 mb-0">{{ comment.text|linebreaks }}</p>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-4">
+                        <i class="bi bi-chat"></i><br>
+                        Комментариев пока нет. Станьте первым!
+                    </p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Боковая панель (только на десктопе) -->
+        <div class="col-lg-4 d-none d-lg-block">
+            <!-- Панель голосования -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Оценка идеи</h5>
+                    
+                    {% if user.is_authenticated %}
+                    <div class="d-flex justify-content-center gap-3 mb-3">
+                        <button class="btn btn-vote {% if user_vote == 'up' %}btn-success active{% else %}btn-outline-success{% endif %}" 
+                                data-vote-type="up" data-idea-slug="{{ idea.slug }}">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                            <span class="vote-count">{{ votes_up }}</span>
+                        </button>
+                        <button class="btn btn-vote {% if user_vote == 'down' %}btn-danger active{% else %}btn-outline-danger{% endif %}" 
+                                data-vote-type="down" data-idea-slug="{{ idea.slug }}">
+                            <i class="bi bi-hand-thumbs-down"></i>
+                            <span class="vote-count">{{ votes_down }}</span>
+                        </button>
+                    </div>
+                    {% else %}
+                    <div class="d-flex justify-content-center gap-3 mb-3">
+                        <div class="btn btn-outline-success">
+                            <i class="bi bi-hand-thumbs-up"></i> {{ votes_up }}
+                        </div>
+                        <div class="btn btn-outline-danger">
+                            <i class="bi bi-hand-thumbs-down"></i> {{ votes_down }}
+                        </div>
+                    </div>
+                    <p class="small text-muted">
+                        <a href="{% url 'account_login' %}">Войдите</a>, чтобы проголосовать.
+                    </p>
+                    {% endif %}
+                    
+                    <small class="text-muted">
+                        Всего голосов: <strong class="total-votes">{{ total_votes }}</strong>
+                    </small>
+                </div>
+            </div>
+
+            <!-- Статистика -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Статистика</h5>
+                    <ul class="list-unstyled">
+                        {% if idea.author %}
+                        <li class="d-flex justify-content-between mb-2">
+                            <span><i class="bi bi-person text-secondary"></i> Автор:</span>
+                            <strong>{{ idea.author.get_full_name|default:idea.author.username }}</strong>
+                        </li>
+                        {% endif %}
+                        <li class="d-flex justify-content-between mb-2">
+                            <span><i class="bi bi-chat-dots text-primary"></i> Комментарии:</span>
+                            <strong>{{ comments.count }}</strong>
+                        </li>
+                        <li class="d-flex justify-content-between mb-2">
+                            <span><i class="bi bi-hand-thumbs-up text-success"></i> За:</span>
+                            <strong>{{ votes_up }}</strong>
+                        </li>
+                        <li class="d-flex justify-content-between mb-2">
+                            <span><i class="bi bi-hand-thumbs-down text-danger"></i> Против:</span>
+                            <strong>{{ votes_down }}</strong>
+                        </li>
+                        <li class="d-flex justify-content-between">
+                            <span><i class="bi bi-calendar3 text-info"></i> Создана:</span>
+                            <strong>{{ idea.created_at|date:"d.m.Y" }}</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Похожие идеи -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Другие идеи</h5>
+                    <a href="{% url 'ideas:all_ideas' %}?category={{ idea.category }}" class="btn btn-outline-primary btn-sm w-100 mb-2">
+                        <i class="bi bi-tag"></i> Идеи в категории "{{ idea.get_category_display }}"
+                    </a>
+                    <a href="{% url 'ideas:all_ideas' %}" class="btn btn-outline-secondary btn-sm w-100">
+                        <i class="bi bi-grid"></i> Все идеи
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+console.log('JavaScript loaded successfully!');
+
+// Функция для получения CSRF токена
+function getCSRFToken() {
+    const token = document.querySelector('[name=csrfmiddlewaretoken]');
+    if (token) {
+        return token.value;
+    }
+    // Альтернативный способ получения токена из cookies
+    const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        ?.split('=')[1];
+    return cookieValue || '';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded');
+    
+    // Обработка голосования
+    const voteButtons = document.querySelectorAll('.btn-vote');
+    console.log('Found vote buttons:', voteButtons.length);
+    
+    voteButtons.forEach((button, index) => {
+        console.log(`Setting up button ${index}:`, button);
+        button.addEventListener('click', function(e) {
+            console.log('Vote button clicked!', this);
+            e.preventDefault(); // Предотвращаем стандартное поведение
+            
+            const voteType = this.dataset.voteType;
+            const ideaSlug = this.dataset.ideaSlug;
+            const csrfToken = getCSRFToken();
+            
+            console.log('Vote data:', { voteType, ideaSlug, csrfToken: csrfToken ? 'found' : 'not found' });
+            
+            if (!csrfToken) {
+                alert('Ошибка: CSRF токен не найден. Обновите страницу и попробуйте снова.');
+                return;
+            }
+            
+            fetch(`/ideas/${ideaSlug}/vote/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: `vote_type=${voteType}`
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                
+                // Обновляем счетчики во всех панелях (мобильная и десктопная)
+                const upCounters = document.querySelectorAll('[data-vote-type="up"] .vote-count');
+                const downCounters = document.querySelectorAll('[data-vote-type="down"] .vote-count');
+                const totalVotesElements = document.querySelectorAll('#mobile-total-votes, .total-votes');
+                
+                upCounters.forEach(counter => counter.textContent = data.votes_up);
+                downCounters.forEach(counter => counter.textContent = data.votes_down);
+                totalVotesElements.forEach(element => element.textContent = data.total_votes);
+                
+                // Обновляем состояние кнопок
+                voteButtons.forEach(btn => {
+                    btn.classList.remove('btn-success', 'btn-danger', 'active');
+                    if (btn.dataset.voteType === 'up') {
+                        btn.classList.add('btn-outline-success');
+                    } else {
+                        btn.classList.add('btn-outline-danger');
+                    }
+                });
+                
+                // Подсвечиваем активную кнопку
+                if (data.action !== 'removed') {
+                    if (voteType === 'up') {
+                        this.classList.remove('btn-outline-success');
+                        this.classList.add('btn-success', 'active');
+                    } else {
+                        this.classList.remove('btn-outline-danger');
+                        this.classList.add('btn-danger', 'active');
+                    }
+                }
+                
+                console.log('Vote processed successfully:', data.action);
+            })
+            .catch(error => {
+                console.error('Voting error:', error);
+                alert('Произошла ошибка при голосовании: ' + error.message);
+            });
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .btn-vote {
+        min-width: 70px;
+    }
+    .card {
+        border-radius: 0.75rem;
+    }
+    .badge {
+        font-weight: 500;
+    }
+    
+    /* Мобильная панель голосования */
+    #mobile-voting-panel {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 2px solid #dee2e6;
+    }
+    
+    #mobile-voting-panel .card-title {
+        color: #495057;
+        font-weight: 600;
+    }
+    
+    /* Адаптивные кнопки голосования */
+    @media (max-width: 576px) {
+        .btn-vote {
+            min-width: 60px;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        #mobile-voting-panel .gap-3 {
+            gap: 1rem !important;
+        }
+    }
+</style>
+{% endblock %}

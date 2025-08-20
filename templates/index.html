@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="site-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto blog-content">
+                <p class="lead">Кратко о нашем поселке</p>
+                <p><img src="{% static 'images/n_lyada.jpg' %}" alt="Image" class="img-fluid"></p>
+                <p>История поселка Новая Ляда насчитывает более тысячи лет. Еще в VIII-XI веках на этих землях существовали поселения древней мордвы-эрзи. Русская история началась в конце XVII века, когда монахи Трегуляевского монастыря основали здесь вотчину с "бортными ухожаями, пашнею и сенными покосами".</p>
+                <p>В XIX веке поселок стал промышленным центром благодаря винокуренному заводу семьи Чичериных и предприятиям Можаровых. Сегодня Новая Ляда - современный поселок в 13 км от Тамбова с населением около 9 тысяч человек, административный центр одного из крупнейших сельских муниципальных образований Тамбовской области.</p>
+                <br>
+                <!--                Кнопка-->
+                <div style="display: flex; justify-content: flex-end;">
+                    <a href="{% url 'about_village:history' %}"><button class="button-83" role="button">Подробнее...</button></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<hr class="hr-shelf">
+
+<div class="site-section" id="press-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-5 mb-lg-0">
+                <div class="block-heading-1">
+                    <span>Новости и события</span>
+                    <h2>Немного новостей</h2>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <ul class="list-unstyled">
+                    {% for event in events %}
+                    <li class="mb-4">
+                        <h2 class="h4"><a href="{{ event.get_absolute_url }}" class="text-black">{{ event.title }}</a></h2>
+                        
+                        <!-- Мобильная версия: вертикальное расположение -->
+                        <div class="d-block d-md-none mb-3">
+                            <img src="{{ event.image.url }}" class="img-fluid rounded w-100 mb-2" alt="{{ event.title }}">
+                            <span class="d-block text-secondary mb-1">{{ event.date_of_event }}</span>
+                            <p class="mb-0">{{ event.content|truncatechars:100 }}</p>
+                        </div>
+                        
+                        <!-- Десктопная версия: горизонтальное расположение -->
+                        <div class="d-none d-md-flex align-items-start">
+                            <div class="flex-shrink-0">
+                                <img src="{{ event.image.url }}" class="img-fluid rounded" style="width: 200px; height: auto;" alt="{{ event.title }}">
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <span class="d-block text-secondary">{{ event.date_of_event }}</span>
+                                <p class="mb-0">{{ event.content|truncatechars:100 }}</p>
+                            </div>
+                        </div>
+                        
+                        <p class="link-read-post"><a href="{{ event.get_absolute_url }}">Читать пост</a></p>
+                    </li>
+                    <hr class="hr-shelf">
+                    {% endfor %}
+                </ul>
+                <br>
+
+                <div style="display: flex; justify-content: flex-end;">
+                    <a href="{% url 'events:events_all' %}"><button class="button-83" role="button">Все новости</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="site-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-5 mb-lg-0">
+                <div class="block-heading-1">
+                    <span>Объявления</span>
+                    <h2>Немного объявлений</h2>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <ul class="list-unstyled">
+                    {% for ad in ads %}
+                    <li class="mb-4">
+                        <h2 class="h4"><a href="{{ ad.get_absolute_url }}" class="text-black">{{ ad.title }}</a></h2>
+                        
+                        <!-- Мобильная версия: вертикальное расположение -->
+                        <div class="d-block d-md-none mb-3">
+                            {% if ad.image %}
+                            <img src="{{ ad.image.url }}" class="img-fluid rounded w-100 mb-2" alt="{{ ad.title }}">
+                            {% else %}
+                            <div class="bg-light d-flex align-items-center justify-content-center rounded w-100 mb-2" style="height: 150px;">
+                                <span class="icon-image text-muted fs-1"></span>
+                            </div>
+                            {% endif %}
+                            <span class="d-block text-secondary mb-1">{{ ad.created|date:"d.m.Y H:i" }}</span>
+                            <p class="mb-0">{{ ad.content|truncatechars:100 }}</p>
+                        </div>
+                        
+                        <!-- Десктопная версия: горизонтальное расположение -->
+                        <div class="d-none d-md-flex align-items-start">
+                            <div class="flex-shrink-0">
+                                {% if ad.image %}
+                                <img src="{{ ad.image.url }}" class="img-fluid rounded" style="width: 200px; height: auto;" alt="{{ ad.title }}">
+                                {% else %}
+                                <div class="bg-light d-flex align-items-center justify-content-center rounded" style="width: 200px; height: 120px;">
+                                    <span class="icon-image text-muted"></span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <span class="d-block text-secondary">{{ ad.created|date:"d.m.Y H:i" }}</span>
+                                <p class="mb-0">{{ ad.content|truncatechars:100 }}</p>
+                            </div>
+                        </div>
+                        
+                        <p class="link-read-post"><a href="{{ ad.get_absolute_url }}">Перейти к объявлению</a></p>
+                    </li>
+                    <hr class="hr-shelf">
+                    {% endfor %}
+                </ul>
+                <br>
+
+                <div style="display: flex; justify-content: flex-end;">
+                    <a href="{% url 'advertisement:advertisement_all' %}"><button class="button-83" role="button">Все объявления</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="site-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-5 mb-lg-0">
+                <div class="block-heading-1">
+                    <span>Идеи улучшений</span>
+                    <h2>Немного идей</h2>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <ul class="list-unstyled">
+                    {% for idea in ideas %}
+                    <li class="mb-4">
+                        <h2 class="h4"><a href="{{ idea.get_absolute_url }}" class="text-black">{{ idea.title }}</a></h2>
+                        
+                        <!-- Мобильная версия: вертикальное расположение -->
+                        <div class="d-block d-md-none mb-3">
+                            {% if idea.image %}
+                            <img src="{{ idea.image.url }}" class="img-fluid rounded w-100 mb-2" alt="{{ idea.title }}">
+                            {% else %}
+                            <div class="bg-primary d-flex align-items-center justify-content-center rounded text-white w-100 mb-2" style="height: 150px;">
+                                <i class="bi bi-lightbulb fs-1"></i>
+                            </div>
+                            {% endif %}
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                <span class="badge 
+                                    {% if idea.status == 'pending' %}bg-warning
+                                    {% elif idea.status == 'approved' %}bg-success
+                                    {% elif idea.status == 'implemented' %}bg-primary
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ idea.get_status_display }}
+                                </span>
+                                <span class="badge bg-outline-secondary">{{ idea.get_category_display }}</span>
+                            </div>
+                            <span class="d-block text-secondary mb-1 small">
+                                <i class="bi bi-geo-alt"></i> {{ idea.location }}
+                                {% if idea.author %} | {{ idea.author.get_full_name|default:idea.author.username }}{% endif %}
+                            </span>
+                            <p class="mb-0">{{ idea.description|truncatechars:100 }}</p>
+                        </div>
+                        
+                        <!-- Десктопная версия: горизонтальное расположение -->
+                        <div class="d-none d-md-flex align-items-start">
+                            <div class="flex-shrink-0">
+                                {% if idea.image %}
+                                <img src="{{ idea.image.url }}" class="img-fluid rounded" style="width: 200px; height: auto;" alt="{{ idea.title }}">
+                                {% else %}
+                                <div class="bg-primary d-flex align-items-center justify-content-center rounded text-white" style="width: 200px; height: 120px;">
+                                    <i class="bi bi-lightbulb fs-1"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <div class="d-flex gap-2 mb-2">
+                                    <span class="badge 
+                                        {% if idea.status == 'pending' %}bg-warning
+                                        {% elif idea.status == 'approved' %}bg-success
+                                        {% elif idea.status == 'implemented' %}bg-primary
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ idea.get_status_display }}
+                                    </span>
+                                    <span class="badge bg-outline-secondary">{{ idea.get_category_display }}</span>
+                                </div>
+                                <span class="d-block text-secondary mb-1">
+                                    <i class="bi bi-geo-alt"></i> {{ idea.location }} | 
+                                    {% if idea.author %}{{ idea.author.get_full_name|default:idea.author.username }}{% endif %}
+                                </span>
+                                <p class="mb-0">{{ idea.description|truncatechars:100 }}</p>
+                            </div>
+                        </div>
+                        
+                        <p class="link-read-post"><a href="{{ idea.get_absolute_url }}">Посмотреть идею</a></p>
+                    </li>
+                    <hr class="hr-shelf">
+                    {% empty %}
+                    <li class="text-center py-4">
+                        <div class="text-muted">
+                            <i class="bi bi-lightbulb fs-2 d-block mb-2"></i>
+                            <p>Идей пока нет. Станьте первым, кто предложит улучшение для поселка!</p>
+                            <a href="{% url 'ideas:add_idea' %}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Предложить идею
+                            </a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <br>
+
+                <div style="display: flex; justify-content: flex-end;">
+                    <a href="{% url 'ideas:all_ideas' %}"><button class="button-83" role="button">Все идеи</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

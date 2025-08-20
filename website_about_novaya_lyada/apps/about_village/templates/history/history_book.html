@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Заголовок -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Главная</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'about_village:history' %}">История</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Историческая хроника</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-lg-10 mx-auto text-center">
+            <h1 class="display-4 fw-bold">Новая Старая Ляда</h1>
+            <h2 class="h3 text-muted mb-3">Историческая хроника</h2>
+            <p class="lead text-muted">Борис Иванович Юдин, 2004 г.</p>
+            <p class="text-muted">Полная версия книги с оригинальными изображениями</p>
+            <p class="text-muted">Книга была отформатирована с помощью искуственного интеллекта и может иметь неточности в форматировании! Приносим свои извинения!</p>
+            {% if total_pages %}
+                <p class="text-info"><strong>{{ total_pages }} страниц</strong></p>
+            {% endif %}
+            
+        </div>
+    </div>
+
+    {% if error %}
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">Ошибка!</h4>
+                    <p>{{ error }}</p>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        
+
+        
+
+        <!-- Постраничная навигация -->
+        {% if current_page %}
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-center align-items-center gap-2 flex-wrap">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-outline-primary" href="{% url 'about_village:history_book' %}?page=1" title="К началу">⏮️</a>
+                    {% if has_prev %}
+                        <a class="btn btn-outline-primary" href="{% url 'about_village:history_book' %}?page={{ prev_page }}" title="Предыдущая">◀️</a>
+                    {% else %}
+                        <button class="btn btn-outline-secondary" disabled>◀️</button>
+                    {% endif %}
+                </div>
+                <form method="get" action="{% url 'about_village:history_book' %}">
+                    <div class="input-group input-group-sm" style="width: 190px;">
+                        <span class="input-group-text">Стр.</span>
+                        <input type="number" class="form-control" name="page" min="1" max="{{ total_pages }}" value="{{ current_page_index }}" required>
+                        <button class="btn btn-primary" type="submit">OK</button>
+                    </div>
+                </form>
+                <div class="btn-group" role="group">
+                    {% if has_next %}
+                        <a class="btn btn-outline-primary" href="{% url 'about_village:history_book' %}?page={{ next_page }}" title="Следующая">▶️</a>
+                    {% else %}
+                        <button class="btn btn-outline-secondary" disabled>▶️</button>
+                    {% endif %}
+                    <a class="btn btn-outline-primary" href="{% url 'about_village:history_book' %}?page={{ total_pages }}" title="К концу">⏭️</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Текущая страница книги -->
+        <div class="row">
+            <div class="col-12">
+                <div class="book-page mb-5" id="page-{{ current_page.number }}">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Страница {{ current_page.number }}</h5>
+                            <small>{{ current_page_index }} из {{ total_pages }}</small>
+                        </div>
+                        <div class="card-body">
+                            <!-- Текст страницы -->
+                            <div class="page-content">
+                                <div class="book-text">{{ current_page.content }}</div>
+                                {% if current_page.images %}
+                                <div class="page-images d-none">
+                                    {% for image in current_page.images %}
+                                        <div class="page-image" data-index="{{ forloop.counter0 }}">
+                                            <img src="{% url 'about_village:book_image' image %}" class="img-fluid rounded" alt="Изображение {{ forloop.counter }}">
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Постраничная навигация (дублируем снизу) -->
+        <div class="row mt-3">
+            <div class="col-12 d-flex justify-content-center align-items-center gap-2 flex-wrap">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-outline-primary" href="{% url 'about_village:history_book' %}?page=1" title="К началу">⏮️</a>
+                    {% if has_prev %}
+                        <a class="btn btn-outline-primary" href="{% url 'about_village:history_book' %}?page={{ prev_page }}" title="Предыдущая">◀️</a>
+                    {% else %}
+                        <button class="btn btn-outline-secondary" disabled>◀️</button>
+                    {% endif %}
+                </div>
+                <form method="get" action="{% url 'about_village:history_book' %}">
+                    <div class="input-group input-group-sm" style="width: 190px;">
+                        <span class="input-group-text">Стр.</span>
+                        <input type="number" class="form-control" name="page" min="1" max="{{ total_pages }}" value="{{ current_page_index }}" required>
+                        <button class="btn btn-primary" type="submit">OK</button>
+                    </div>
+                </form>
+                <div class="btn-group" role="group">
+                    {% if has_next %}
+                        <a class="btn btn-outline-primary" href="{% url 'about_village:history_book' %}?page={{ next_page }}" title="Следующая">▶️</a>
+                    {% else %}
+                        <button class="btn btn-outline-secondary" disabled>▶️</button>
+                    {% endif %}
+                    <a class="btn btn-outline-primary" href="{% url 'about_village:history_book' %}?page={{ total_pages }}" title="К концу">⏭️</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Кнопка возврата наверх -->
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <button type="button" class="btn btn-outline-primary btn-lg" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <i class="fas fa-arrow-up"></i> Наверх
+                </button>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+ 
+
+<style>
+.book-header, .book-text {
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    line-height: 1.8;
+    white-space: pre-wrap; /* сохраняем переводы строк */
+    word-wrap: break-word;
+    margin: 0;
+    text-align: justify;
+}
+
+.book-header {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.book-page {
+    scroll-margin-top: 100px;
+}
+
+ 
+
+.page-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.page-content .book-text {
+    line-height: 1.8;
+}
+
+.figure-caption {
+    font-size: 14px;
+    margin: 15px 0 5px 0;
+    padding: 8px 12px;
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    border-radius: 4px;
+}
+
+.photo-caption {
+    font-size: 12px;
+    margin: 5px 0 15px 20px;
+    color: #666;
+}
+
+.chapter-title {
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
+    margin: 25px 0 15px 0;
+}
+
+.book-paragraph {
+    margin-bottom: 12px;
+    text-align: justify;
+    font-family: 'Georgia', serif;
+}
+
+@media (max-width: 768px) {
+    .book-text, .book-header {
+        font-size: 12px;
+    }
+    
+    .images-gallery {
+        padding: 15px;
+    }
+}
+</style>
+
+<script>
+function scrollToPage(pageNum) {
+    const pageElement = document.getElementById('page-' + pageNum);
+    if (pageElement) {
+        pageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+ 
+
+// Добавляем прогресс-бар при прокрутке
+window.addEventListener('scroll', function() {
+    const scrollTop = window.pageYOffset;
+    const docHeight = document.body.offsetHeight;
+    const winHeight = window.innerHeight;
+    const scrollPercent = scrollTop / (docHeight - winHeight);
+    const scrollPercentRounded = Math.round(scrollPercent * 100);
+    
+    // Можно добавить прогресс-бар в будущем
+});
+
+// Форматирование текста книги
+document.addEventListener('DOMContentLoaded', function() {
+    // Находим все элементы с текстом книги
+    const bookTexts = document.querySelectorAll('.book-text');
+    
+    bookTexts.forEach(function(textElement) {
+        let content = textElement.innerHTML;
+        
+        // Выделяем подписи к рисункам
+        // Перед вставкой подписи вставим контейнер для изображения, если он есть для этой подписи
+        content = content.replace(/(Рис\.\s*(\d+)\..*?)(\n|$)/gi, function(match, full, num, tail){
+            // Попытаемся взять соответствующее изображение по порядку появления
+            const pageContentEl = textElement.closest('.page-content');
+            if (!pageContentEl) return '<div class="figure-caption">'+full+'</div>'+tail;
+            const images = pageContentEl.querySelectorAll('.page-images .page-image');
+            const idx = images && images.length ? 0 : -1;
+            if (idx >= 0) {
+                const imgEl = images[0];
+                const html = imgEl.innerHTML + '<div class="figure-caption">'+full+'</div>' + tail;
+                imgEl.remove();
+                return html;
+            }
+            return '<div class="figure-caption">'+full+'</div>'+tail;
+        });
+        content = content.replace(/(Puc\.\s*(\d+)\..*?)(\n|$)/gi, function(match, full, num, tail){
+            const pageContentEl = textElement.closest('.page-content');
+            if (!pageContentEl) return '<div class="figure-caption">'+full+'</div>'+tail;
+            const images = pageContentEl.querySelectorAll('.page-images .page-image');
+            const idx = images && images.length ? 0 : -1;
+            if (idx >= 0) {
+                const imgEl = images[0];
+                const html = imgEl.innerHTML + '<div class="figure-caption">'+full+'</div>' + tail;
+                imgEl.remove();
+                return html;
+            }
+            return '<div class="figure-caption">'+full+'</div>'+tail;
+        });
+            
+        // Выделяем подписи к фото
+        content = content.replace(/(Фото,.*?)(\n|$)/gi, function(match, full, tail){
+            const pageContentEl = textElement.closest('.page-content');
+            if (!pageContentEl) return '<div class="photo-caption">'+full+'</div>'+tail;
+            const images = pageContentEl.querySelectorAll('.page-images .page-image');
+            const idx = images && images.length ? 0 : -1;
+            if (idx >= 0) {
+                const imgEl = images[0];
+                const html = imgEl.innerHTML + '<div class="photo-caption">'+full+'</div>' + tail;
+                imgEl.remove();
+                return html;
+            }
+            return '<div class="photo-caption">'+full+'</div>'+tail;
+        });
+            
+        // Выделяем заголовки глав
+        content = content.replace(/(Глава \d+\..*?)(\n|$)/gi, 
+            '<div class="chapter-title">$1</div>$2');
+        
+        textElement.innerHTML = content;
+    });
+});
+</script>
+{% endblock %}
