@@ -1,0 +1,10 @@
+# Development requirements
+-r base.txt
+
+# Testing
+pytest>=8.4.1
+pytest-cov>=6.2.1
+pytest-django>=4.9.0
+
+# Development tools
+pyopenssl>=25.1.0

@@ -30,4 +30,8 @@ dev = [
     "pyopenssl>=25.1.0",
 ]
 
+[tool.setuptools.packages.find]
+include = ["website_about_novaya_lyada*"]
+exclude = ["book_images*", "book_extracted*", "scripts*", ".github*", "nl_website*"]
+
 
