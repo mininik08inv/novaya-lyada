@@ -6,7 +6,6 @@ __pycache__/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-media/
 
 # Environment variables
 .env
@@ -82,7 +81,7 @@ staticfiles/
 static_root/
 
 # Collected static files
-/static/
+#/static/
 
 # Node modules (если есть)
 node_modules/
