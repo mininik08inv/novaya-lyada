@@ -1,0 +1,7 @@
+перед применением миграций на сервере установить переменную
+export DJANGO_SETTINGS_MODULE=website_about_novaya_lyada.settings.production
+
+затем миграции
+python manage.py migrate --noinput
+
+
