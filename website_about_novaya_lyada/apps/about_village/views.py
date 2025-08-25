@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView
-from about_village.models import FamousPerson
+from website_about_novaya_lyada.apps.about_village.models import FamousPerson
 
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView

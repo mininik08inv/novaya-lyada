@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     {% load static %}
+    {% load user_tags %}
     <title>Новая Ляда</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -70,14 +71,18 @@
 
                     <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
                         <li><a href="{% url 'core:home' %}" class="nav-link">Главная</a></li>
+
                         <li><a href="{% url 'core:about' %}" class="nav-link">О сайте</a></li>
+
 
                         <li class="has-children">
                             <a href="#" class="nav-link">О посёлке</a>
                             <ul class="dropdown arrow-top">
                                 <li><a href="{% url 'about_village:history' %}" class="nav-link">История</a></li>
+
                                 <li><a href="#" class="nav-link">Население</a></li>
                                 <li><a href="{% url 'places:all_places' %}" class="nav-link">Места</a></li>
+
                                 <li><a href="{% url 'about_village:famous_person_all' %}" class="nav-link">Известные
                                     люди</a></li>
                                 <li><a href="#" class="nav-link">Контакты и карта</a></li>
@@ -94,10 +99,24 @@
                         </li>
 
                         <li><a href="{% url 'events:events_all' %}" class="nav-link">Новости</a></li>
+
                         <li><a href="{% url 'advertisement:advertisement_all' %}" class="nav-link">Объявления</a></li>
+
                         <li><a href="{% url 'ideas:all_ideas' %}" class="nav-link">Идеи!</a></li>
+
                         <li class="has-children">
-                            <a href="#" class="nav-link">USER</a>
+                            <a href="#" class="nav-link">
+                                {% if user.is_authenticated %}
+                                    <!-- Аватар пользователя в навигации -->
+                                    {% get_user_avatar user 40 as nav_avatar %}
+                                    {% if nav_avatar %}
+                                        <img src="{{ nav_avatar }}" class="rounded-circle me-2" width="32" height="32" alt="avatar" style="object-fit: cover;">
+                                    {% endif %}
+                                    {{ user.username }}
+                                {% else %}
+                                    Профиль
+                                {% endif %}
+                            </a>
                             <ul class="dropdown arrow-top">
                                 {% if user.is_authenticated %}
                                 <li class="nav-link"><a href="{% url 'accounts:profile' %}">{{ user.username }}</a></li>
@@ -190,51 +209,10 @@
 </script>
 <script src="{% static 'js/owl.carousel.min.js' %}"></script>
 <script src="{% static 'js/jquery.sticky.js' %}"></script>
-<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-<script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
-<script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
 <script src="{% static 'js/aos.js' %}"></script>
-
 <script src="{% static 'js/main.js' %}"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const header = document.querySelector('.site-navbar');
-        let lastScroll = 0;
-        const scrollThreshold = 100;
-        let ticking = false;
-
-        function updateHeaderVisibility() {
-            const currentScroll = window.pageYOffset;
-
-            // Для мобильных устройств учитываем touch-события
-            const isMobile = window.innerWidth <= 768;
-            const threshold = isMobile ? 50 : scrollThreshold;
-
-            if (currentScroll > lastScroll && currentScroll > threshold) {
-                header.classList.add('hide');
-            } else if (currentScroll < lastScroll) {
-                header.classList.remove('hide');
-            }
-
-            lastScroll = currentScroll;
-            ticking = false;
-        }
-
-        window.addEventListener('scroll', function() {
-            if (!ticking) {
-                window.requestAnimationFrame(updateHeaderVisibility);
-                ticking = true;
-            }
-        });
-
-        // Учитываем изменение размера окна
-        window.addEventListener('resize', function() {
-            header.classList.remove('hide');
-            lastScroll = window.pageYOffset;
-        });
-    });
-</script>
+<script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+<script src="{% static 'js/django-password-eye.js' %}"></script>
 
 {% block extra_js %}
 {% endblock %}

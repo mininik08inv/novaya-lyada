@@ -3,8 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 
-from advertisement.models import Advertisement, AdvertisementCategory
-from advertisement.forms import AddAdvertisementForm, UpdateAdvertisementForm
+from website_about_novaya_lyada.apps.advertisement.models import Advertisement, AdvertisementCategory
+from website_about_novaya_lyada.apps.advertisement.forms import AddAdvertisementForm, UpdateAdvertisementForm
 
 
 class AllAdvertisement(ListView):

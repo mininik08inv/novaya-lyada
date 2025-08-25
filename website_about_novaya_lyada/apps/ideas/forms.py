@@ -1,5 +1,6 @@
 from django import forms
-from .models import ImprovementIdea, IdeaComment
+from django.forms import ModelForm
+from website_about_novaya_lyada.apps.ideas.models import ImprovementIdea, Comment
 
 
 class IdeaForm(forms.ModelForm):
@@ -37,7 +38,7 @@ class IdeaForm(forms.ModelForm):
 
 class CommentForm(forms.ModelForm):
     class Meta:
-        model = IdeaComment
+        model = Comment
         fields = ['text']
         widgets = {
             'text': forms.Textarea(attrs={

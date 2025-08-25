@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from events.models import Event, Category
+from website_about_novaya_lyada.apps.events.models import Event, Category
 
 # Register your models here.
 

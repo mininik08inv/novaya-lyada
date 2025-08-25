@@ -1,6 +1,5 @@
-from django.urls import path, reverse_lazy
-
-from . import views
+from django.urls import path
+from website_about_novaya_lyada.apps.events import views
 
 app_name = "events"
 

@@ -8,8 +8,8 @@ from django.http import JsonResponse
 from django.db.models import Count, Q
 import logging
 
-from .models import ImprovementIdea, IdeaComment, IdeaVote
-from .forms import IdeaForm, CommentForm
+from website_about_novaya_lyada.apps.ideas.models import ImprovementIdea, IdeaComment, IdeaVote
+from website_about_novaya_lyada.apps.ideas.forms import IdeaForm, CommentForm
 
 logger = logging.getLogger(__name__)
 

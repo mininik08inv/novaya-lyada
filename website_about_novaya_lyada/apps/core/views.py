@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from events.models import Event
-from advertisement.models import Advertisement
-from ideas.models import ImprovementIdea
+from website_about_novaya_lyada.apps.events.models import Event
+from website_about_novaya_lyada.apps.advertisement.models import Advertisement
+from website_about_novaya_lyada.apps.ideas.models import ImprovementIdea
 
 
 # Create your views here.

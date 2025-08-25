@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from website_about_novaya_lyada.apps.ideas import views
 
 app_name = "ideas"
 

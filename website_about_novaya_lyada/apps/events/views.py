@@ -1,10 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.views.generic import DetailView, UpdateView, CreateView
-from events.models import Event, Category
-from events.forms import AddEventForm
+from website_about_novaya_lyada.apps.events.models import Event, Category
+from website_about_novaya_lyada.apps.events.forms import AddEventForm
 
 
 class ShowEvent(DetailView):

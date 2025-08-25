@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from about_village.models import FamousPerson, CategoryPeople
+from website_about_novaya_lyada.apps.about_village.models import FamousPerson, CategoryPeople
 
 # Register your models here.
 

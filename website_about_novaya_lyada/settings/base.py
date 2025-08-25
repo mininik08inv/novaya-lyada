@@ -187,7 +187,19 @@ SOCIALACCOUNT_PROVIDERS = {
             'secret': os.getenv('VK_CLIENT_SECRET'),
             'key': ''
         },
-        'SCOPE': ['email'],
+        'SCOPE': [
+            'profile',
+            'email'
+        ],
+        'AUTH_PARAMS': {
+            'auth_type': 'reauthenticate'
+        },
+        'EXTRA_DATA': [
+            ('first_name', 'first_name'),
+            ('last_name', 'last_name'),
+            ('photo', 'photo'),
+            ('screen_name', 'screen_name'),
+        ]
     },
     'google': {
         'APP': {
@@ -198,6 +210,15 @@ SOCIALACCOUNT_PROVIDERS = {
             'profile',
             'email',
         ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'EXTRA_DATA': [
+            ('name', 'name'),
+            ('picture', 'picture'),
+            ('given_name', 'given_name'),
+            ('family_name', 'family_name'),
+        ]
     }
 }
 
@@ -215,12 +236,16 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
-EMAIL_USE_TLS = True
+
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.yandex.ru')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '465'))
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@novaya-lyada.ru')
+EMAIL_USE_TLS = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER
 
 # OAuth settings for development
 if DEBUG:

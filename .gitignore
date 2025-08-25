@@ -38,6 +38,7 @@ share/python-wheels/
 MANIFEST
 
 # Virtual environments
+application_data.txt
 .env
 .venv
 env/

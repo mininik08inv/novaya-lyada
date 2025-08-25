@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from advertisement.models import Advertisement, AdvertisementCategory
+from website_about_novaya_lyada.apps.advertisement.models import Advertisement, AdvertisementCategory
 
 
 @admin.register(Advertisement)

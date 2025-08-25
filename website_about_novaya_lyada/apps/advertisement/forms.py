@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
-
-from advertisement.models import Advertisement, AdvertisementCategory
+from django.forms import ModelForm
+from website_about_novaya_lyada.apps.advertisement.models import Advertisement, AdvertisementCategory
 
 
 class DateTimeLocalInput(forms.DateTimeInput):

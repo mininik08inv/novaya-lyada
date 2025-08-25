@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from places.models import Place, PlacePhoto, CategoryPlace, PlaceReview
+from website_about_novaya_lyada.apps.places.models import Place, PlacePhoto, CategoryPlace, PlaceReview
 
 # Register your models here.
 

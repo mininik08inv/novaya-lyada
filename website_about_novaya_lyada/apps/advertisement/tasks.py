@@ -1,7 +1,7 @@
 from celery import shared_task
 from django.utils import timezone
-
-from advertisement.models import Advertisement
+from django.core.mail import send_mail
+from website_about_novaya_lyada.apps.advertisement.models import Advertisement
 
 
 @shared_task
